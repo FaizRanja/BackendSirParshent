@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wellcome my website </title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="text-center">
+        Wello Come me Website 
+      </h1>
+      <div class="form-group container">
+        <label for="location">Enter your location (Autiocomplete)</label>
+        <input type="text" id="Searchinputfield" class="form-control">
+      </div>
+      <br>
+      <table class="table">
+        <thead>
+          <tr>
+            <td>Country</td>
+            <td>State</td>
+            <td>City</td>
+            <td>Pin or Zip Code</td>
+          </tr>
+        </thead>
+        <tbody id="body">
+
+        </tbody>
+      </table>
+    </div>
+
+
+    <script type="text/javascript"src="https://maps.google.com/maps/api/js?key=AIzaSyA2UzxBRympTMK_OyDW0gIz5p5ZHbXi_9c&libraries=places"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  
+ <script>
+    let places, input, address, city;
+
+    google.maps.event.addDomListener(window, "load", function () {
+        // We will bind the autocomplete to the input field here
+        let autocomplete = new google.maps.places.Autocomplete(
+            document.getElementById("Searchinputfield")
+        );
+
+        google.maps.event.addListener(autocomplete, "place_changed", function () {
+            let place = autocomplete.getPlace();
+         
+
+            let address = place.formatted_address;
+            let latitude = place.geometry.location.lat();
+            let longitude = place.geometry.location.lng();
+            let latLng = new google.maps.LatLng(latitude, longitude);
+            let geocoder = new google.maps.Geocoder();
+
+            geocoder.geocode({ latLng: latLng }, function (results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    if (results[0]) {
+                        let address = results[0].formatted_address;
+                        let pin =
+                            results[0].address_components[
+                                results[0].address_components.length - 1
+                            ].long_name;
+                        let Country =
+                            results[0].address_components[
+                                results[0].address_components.length - 2
+                            ].long_name;
+                        let State =
+                            results[0].address_components[
+                                results[0].address_components.length - 3
+                            ].long_name;
+                        let city =
+                            results[0].address_components[
+                                results[0].address_components.length - 4
+                            ].long_name;
+                      
+
+                        let row = `
+                            <tr id ='countary'>
+                                <td>${Country}</td>
+                                <td>${State}</td>
+                                <td>${city}</td>
+                                <td>${pin}</td>
+                            </tr>
+                        `;
+
+                        $("#body").html(row);
+                    }
+                }
+            });
+        });
+    });
+</script>
+
+  
+  
+  </body>
+ 
+</html>
